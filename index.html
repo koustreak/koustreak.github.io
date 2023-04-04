@@ -272,122 +272,40 @@
 
                 <div class="project shadow-large">
                     <div class="project-image">
-                        <img src="images/covid19.png" />
+                        <img src="images/data_cleaner.png" />
                     </div>
                     <!-- End .project-image -->
                     <div class="project-info">
-                        <h3>Covid 19 Android App</h3>
+                        <h3>PyWipe</h3>
                         <p>
-                            An Android App to see the statistics of Covid 19 around world.
+                            PyWipe is a Data Cleaning toolkit , built using python.
+                            PyWipe can crawl data from Remote Server or Data Lake , or from any offline storage.
+                            Then PyWipe detect bad data and highlight them.
+                            PyWipe can take action, to clean the bad data, if instructed by the user.
                         </p>
-                        <a target="_blank" href="https://github.com/vimaltiwari2612/Covid19AndroidApp">View Project</a>
+                        <b>Project In Progress, will release soon.</b>
                     </div>
                     <!-- End .project-info -->
                 </div>
 
                 <div class="project shadow-large">
                     <div class="project-image">
-                        <img src="images/codeparser.png" />
+                        <img src="images/compare.png" />
                     </div>
                     <!-- End .project-image -->
                     <div class="project-info">
-                        <h3>OOP Code Parser & UML Creator</h3>
+                        <h3>Metastore Comparison ( Sondesh )</h3>
                         <p>
-                            simple Parser which uses Compiler design concepts. Lexical analysis symbol table formation
-                            parse the code using symbol table This code works for Java Code. It can be made for other
-                            languages too using the same concepts. Create UML diagrams with class code. Convert your
-                            code into UML direclty using this tool. It can convert any OOP based code into UML.
+                            Simple Comparator toolkit, which can compare two DDL Statement.
+                            In-Short this is a SQL Parser, which crawl .sql files ( DDL Only ) and compare the results.
+                            It is also capable of comparing two metastore.
+                            Sondesh is my cat's name, so i thought named this project after my cat.
                         </p>
-                        <a target="_blank" href="https://github.com/vimaltiwari2612/JavaCodeParserAndUMLCreator">View
-                            Project</a>
+                        <a target="_blank" href="https://github.com/koustreak/Sondesh">View Project</a>
                     </div>
                     <!-- End .project-info -->
                 </div>
                 <!-- End .project -->
-
-                <div class="project shadow-large">
-                    <div class="project-image">
-                        <img src="images/sfchromeext.png" />
-                    </div>
-                    <!-- End .project-image -->
-                    <div class="project-info">
-                        <h3>Salesforce Chrome Extension</h3>
-                        <p>
-                            This Salesforce Chrome extension can be used to search metadata of an object and performing
-                            soql queries. This is verison 1.0. The Development is In-Progress. It is specifically
-                            designed for chrome browser.
-                        </p>
-                        <a target="_blank" href="https://github.com/vimaltiwari2612/SalesforceChromeExtension">View
-                            Project</a>
-                    </div>
-                    <!-- End .project-info -->
-                </div>
-
-                <div class="project shadow-large">
-                    <div class="project-image">
-                        <img src="images/avenger.png" />
-                    </div>
-                    <!-- End .project-image -->
-                    <div class="project-info">
-                        <h3>Avengers Memory Game</h3>
-                        <p>
-                            Simple memory game based on Vanilla JS. The idea of this game is to save the earth in a
-                            fixed time.
-                        </p>
-                        <a target="_blank"
-                            href="http://vimaltiwari.coolpage.biz/Game/Avengers-Memory-Game/index.html">View Project</a>
-                    </div>
-                    <!-- End .project-info -->
-                </div>
-
-                <h3><a target="_blank" href="https://github.com/vimaltiwari2612">More Projects</a></h2>
-
-                    <script>
-                        let projURL = 'https://api.github.com/users/vimaltiwari2612/repos?sort=createdDate&per_page=100';
-                        fetch(projURL)
-                            .then(res => res.json())
-                            .then((out) => {
-
-                                var div = '<div class="cards" > ';
-                                var projects = {};
-
-                                for (item in out) {
-                                    if (out[item].has_wiki == true) {
-                                        out[item].name = out[item].name.replaceAll('-', ' ');
-                                        if (out[item].description == null) {
-                                            out[item].description = "";
-                                        }
-                                        if (projects[out[item].language] === undefined) {
-                                            projects[out[item].language] = [];
-                                        }
-                                        projects[out[item].language].push(out[item]);
-                                    }
-                                }
-
-                                for (var key in projects) {
-                                    var heading = key;
-                                    if (heading == "null") {
-                                        heading = "Android";
-                                    }
-                                    var parentDiv = '<div><h3>' + heading + '</h3>';
-                                    for (var i = 0; i < projects[key].length; i++) {
-                                        var item = projects[key][i];
-                                        var node = '<div class="card"><a target="_blank" href="' + item.html_url + '">' + item.name + '</a></div>';
-                                        parentDiv += node;
-                                    }
-                                    div += parentDiv + '</div>';
-                                }
-
-                                $('#projects .row').after(div + '</div>');
-
-                            })
-                            .catch(err => {
-
-                                console.log('Error while adding dynamic projects', err);
-                            });
-
-
-                    </script>
 
             </div>
         </div>
@@ -399,7 +317,7 @@
 
         <script>
 
-            repoURL2 = 'https://api.github.com/repos/vimaltiwari2612/vimaltiwari2612.github.io/readme';
+            repoURL2 = 'https://api.github.com/repos/koustreak/koustreak.github.io/readme';
 
             fetch(repoURL2)
                 .then(res => res.json())
