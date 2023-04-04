@@ -37,7 +37,6 @@ SKILLS
     <li>Data Lake</li>
     <li>Data Mesh</li>
     <li>Data Warehouse</li>
-    <li>Data Hub</li>
 </ul>
 
 			
