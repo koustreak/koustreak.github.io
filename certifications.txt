@@ -1,4 +1,3 @@
-Trailhead Profile | https://trailhead.salesforce.com/en/me/vimaltiwari | images/ranger.png
 Free Code Camp | https://www.freecodecamp.org/certification/vimaltiwari2612/legacy-front-end | images/freecodeCamp.png
 Problem Solving (Basic) | https://www.hackerrank.com/certificates/6b56045da0ab | images/problem_solving_basic.png
 Python (Basic) | https://www.hackerrank.com/certificates/afcbb694e0a0 | images/python_basic.png
