@@ -31,6 +31,13 @@ SKILLS
     <li>AWS</li>
     <li>Databricks</li>
     <li>Snowflake</li>
+    <br />
+    <li>Data Structure</li>
+    <li>System Design</li>
+    <li>Data Lake</li>
+    <li>Data Mesh</li>
+    <li>Data Warehouse</li>
+    <li>Data Hub</li>
 </ul>
 
 			
