@@ -342,65 +342,29 @@
     <div id="skills" class="Programming">
         <h2 class="heading">Programming</h2>
         <ul>
-            <li><a target="_blank" href="https://www.hackerrank.com/vimaltiwari2612">Hacker Rank</a></li>
-            <li><a target="_blank" href="https://app.codesignal.com/profile/vimal_tiwari">Code Signal</a></li>
+            <li><a target="_blank" href="https://www.hackerrank.com/dot_py1">Hacker Rank</a></li>
+            <li><a target="_blank" href="https://leetcode.com/Cat_Coder_Man/">Leet Code</a></li>
             <br />
-            <li><a target="_blank" href="https://trailblazer.me/id?uid=vimaltiwari&cmty=trailhead">Salesforce
-                    Trailhead</a></li>
+            <li><a target="_blank" href="https://app.codesignal.com/profile/koustreak">Leet Code</a></li>
+            <li><a target="_blank" href="https://platform.stratascratch.com/user/koustreak">Strata Scratch</a></li>
             <br />
-            <li><a target="_blank" href="https://github.com/vimaltiwari2612/Programming">Coding Questions for
-                    Interviews</a></li>
-
         </ul>
     </div>
 
     <div id="skills" class="Blogs">
         <h2 class="heading">Digital Content & Blogs</h2>
         <ul>
-            <li><a target="_blank" href="https://medium.com/elevate-salesforce">Elevate Your System Design and
-                    Salesforce Knowledge
-                </a></li>
+            <li><a target="_blank" href="https://medium.com/@koushik-dutta">Terminal Magic, Your Data Engineering Buddy</a></li>
             <br />
-            <li><a target="_blank" href="https://github.com/vimaltiwari2612/SystemDesign">System Design</a></li>
-            <li><a target="_blank" href="https://medium.com/elevate-java">Elevate Your Java Knowledge</a></li>
-            <br />
-            <li><a target="_blank" href="https://www.quora.com/profile/Vimal-Tiwari-4">Quora</a></li>
-            <li><a target="_blank" href="https://www.instagram.com/thesoulfulwriteups">The Soulful Writeups</a></li>
-
         </ul>
     </div>
-
-    <div id="skills" class="Games">
-        <h2 class="heading">Games and Utilities</h2>
-        <ul id="dynamic-lists">
-            <script>
-                let url = 'https://api.github.com/users/vimaltiwari2612/repos?per_page=100';
-                var games = document.getElementById("dynamic-lists");
-                fetch(url)
-                    .then(res => res.json())
-                    .then((out) => {
-                        for (item in out) {
-                            if (out[item].homepage != null && out[item].homepage != "" && !out[item].homepage.includes("salesforce") && !out[item].homepage.includes("sfdc")) {
-                                out[item].name = out[item].name.replaceAll('-', ' ');
-                                var li = document.createElement("li");
-                                li.innerHTML = '<a target="_blank" href="' + out[item].homepage + '">' + out[item].name + '</a>';
-                                games.appendChild(li);
-                            }
-                        }
-                    })
-                    .catch(err => { throw err });
-            </script>
-        </ul>
-    </div>
-
-
     <!-- End #skills -->
 
     <div id="contact">
         <h2>Get in Touch</h2>
         <div id="contact-form">
-            <form method="POST" action="https://formspree.io/vimaltiwari2612@gmail.com">
-                <input type="hidden" name="_subject" value="Contact request from vimaltiwari2612.github.io" />
+            <form method="POST" action="https://formspree.io/dot.py@yahoo.com">
+                <input type="hidden" name="_subject" value="Contact request from koustreak.github.io" />
                 <input type="email" name="_replyto" placeholder="Your email" required>
                 <textarea name="message" placeholder="Your message" required></textarea>
                 <button type="submit">Send</button>
@@ -416,27 +380,15 @@
                 <div class="social">
                     <ul>
                         <li>
-                            <a href="https://github.com/vimaltiwari2612" target="_blank"><i class="fa fa-github"
+                            <a href="https://github.com/koustreak" target="_blank"><i class="fa fa-github"
                                     aria-hidden="true"></i></a>
                         </li>
                         <li>
-                            <a href="https://www.linkedin.com/in/vimaltiwari2612/" target="_blank"><i
+                            <a href="https://www.linkedin.com/in/koushik-dutta-9797a8209/" target="_blank"><i
                                     class="fa fa-linkedin" aria-hidden="true"></i></a>
                         </li>
                         <li>
-                            <a href="https://www.instagram.com/_vimaltiwari/" target="_blank"><i class="fa fa-instagram"
-                                    aria-hidden="true"></i></a>
-                        </li>
-                        <li>
-                            <a href="https://www.facebook.com/vimaltiwari2612/" target="_blank"><i
-                                    class="fa fa-facebook" aria-hidden="true"></i></a>
-                        </li>
-                        <li>
-                            <a href="https://medium.com/@vimaltiwari2612" target="_blank"><i class="fa fa-medium"
-                                    aria-hidden="true"></i></a>
-                        </li>
-                        <li>
-                            <a href="skype:vimaltiwari2612_1?call" target="_blank"><i class="fa fa-skype"
+                            <a href="https://medium.com/@koushik-dutta" target="_blank"><i class="fa fa-medium"
                                     aria-hidden="true"></i></a>
                         </li>
                     </ul>
