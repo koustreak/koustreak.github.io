@@ -17,7 +17,7 @@ I'm a Senior Data Engineer specializing in **distributed systems** and **large-s
 - **Distributed Systems:** Raft consensus, CRDTs, distributed transactions, fault tolerance
 - **Cloud & Orchestration:** AWS (S3, EMR, EKS, Kinesis), Kubernetes, Docker
 - **Languages:** Scala, Go, Python, SQL
-- **Specializations:** Real-time stream processing, consensus algorithms, vector databases, query optimization
+- **Specializations:** Real-time stream processing, consensus algorithms, query optimization, data lakehouse
 
 ---
 
@@ -35,9 +35,9 @@ Custom priority scheduler implementing preemptive multitasking for distributed s
 - Lock-free concurrent priority queue using skip lists (O(log n) insert/delete)
 - Preemption mechanism: checkpoint → serialize to distributed snapshot → reschedule
 - Backpressure handling via token bucket algorithm with dynamic rate adjustment
-- Speculative checkpointing using LSTM to predict preemption 500ms ahead
+- Speculative checkpointing based on historical task execution patterns
 
-**Metrics:** 50M events/day, P99 latency 1.8s, 85% reduction from baseline
+**Metrics:** 2-5M events/day, P99 latency 1.8s, 85% reduction from baseline
 
 ---
 
@@ -96,30 +96,11 @@ Pointer-based views using Apache Iceberg's snapshot isolation.
 
 **Metrics:** 2.5PB data, 99.7% storage efficiency, sub-second queries
 
-**Novel:** Adaptive Z-order column selection using mutual information
+**Novel:** Adaptive Z-order column selection using query log analysis and mutual information
 
 ---
 
-#### 5. AI-Native Multimodal Lakehouse with Vector Embeddings
-Unified storage for structured data + high-dimensional vectors.
-
-**Stack:** Iceberg + Milvus (HNSW) + Spark + ONNX Runtime
-
-**Technical Implementation:**
-- HNSW graph for approximate nearest neighbor search
-- Product quantization (32x compression, <5% recall loss)
-- SIMD-accelerated distance calculations (AVX-512 instructions)
-- Cross-modal embedding alignment using contrastive learning (CLIP-style)
-- Hybrid index: HNSW for vectors + inverted index for metadata
-- Incremental index updates using LSM-tree structure
-
-**Metrics:** 500M vectors, 10ms P95 search latency, 95% recall@10
-
-**Novel:** Learned index structures using neural networks
-
----
-
-#### 6. Bi-Temporal Iceberg with Interval Tree Indexing
+#### 5. Bi-Temporal Iceberg with Interval Tree Indexing
 Extended Iceberg with transaction-time and valid-time dimensions.
 
 **Stack:** Modified Iceberg core (Scala) + Spark + Custom temporal query engine
@@ -140,26 +121,26 @@ Extended Iceberg with transaction-time and valid-time dimensions.
 
 ### Tier 3: Stream Processing & Query Optimization
 
-#### 7. Reinforcement Learning Query Optimizer with Deep Q-Networks
-Self-tuning Spark SQL optimizer using DQN with experience replay.
+#### 6. Cost-Based Query Optimizer with Adaptive Statistics
+Self-tuning Spark SQL optimizer using runtime statistics feedback.
 
-**Stack:** Spark Catalyst + PyTorch + Custom cost model + Airflow
+**Stack:** Spark Catalyst + Custom cost model + Airflow
 
 **Technical Implementation:**
-- State space: query plan DAG, table statistics, cluster metrics (500+ features)
-- Action space: join order, join algorithm, partition count, shuffle strategy
-- Reward function: -1 × (execution_time + cost_penalty)
-- Deep Q-Network with dueling architecture (separate value/advantage streams)
-- Prioritized experience replay using TD-error for sample importance
-- Cardinality estimation using neural density estimators
+- Dynamic programming for join order enumeration (O(3^n) → O(n^2) with pruning)
+- Cardinality estimation using histograms with equi-depth buckets
+- Adaptive query re-optimization based on runtime statistics
+- Join algorithm selection: hash join, sort-merge join, broadcast join
+- Partition count optimization using data skew detection
+- Cost model: CPU cost + I/O cost + network cost
 
-**Metrics:** 45% speedup vs Spark CBO, trained on 500K queries
+**Metrics:** 40% speedup vs Spark CBO, handles 500K+ queries
 
-**Novel:** Multi-task learning - jointly optimize latency, cost, memory
+**Novel:** Adaptive histogram refinement based on query feedback
 
 ---
 
-#### 8. Exactly-Once Semantics with Idempotent Sinks
+#### 7. Exactly-Once Semantics with Idempotent Sinks
 Distributed exactly-once without 2PC using deterministic request IDs.
 
 **Stack:** Kafka + Flink + Custom sink framework (Scala)
@@ -178,87 +159,28 @@ Distributed exactly-once without 2PC using deterministic request IDs.
 
 ---
 
-#### 9. Predictive Auto-Scaling with LSTM Time-Series Forecasting
-ML-driven autoscaling predicting load 15 minutes ahead.
+#### 8. Adaptive Backpressure with Token Bucket Rate Limiting
+Dynamic rate control for stream processing with feedback loops.
 
-**Stack:** Kafka metrics + LSTM (PyTorch) + Kubernetes HPA + Prometheus
+**Stack:** Kafka + Spark Streaming + Kubernetes HPA + Prometheus
 
 **Technical Implementation:**
-- Multi-variate LSTM with attention (input: lag, CPU, memory, event rate)
-- Sliding window forecasting with 5-minute granularity
-- Multi-objective optimization: minimize cost + latency violations + scaling oscillations
-- Pareto frontier approximation using NSGA-II genetic algorithm
-- Kalman filter for smoothing noisy metrics
-- Exponential smoothing for trend detection
+- Token bucket algorithm with dynamic rate adjustment
+- Exponential weighted moving average (EWMA) for smoothing metrics
+- Feedback control loop: monitor latency → adjust rate → observe effect
+- Multi-level backpressure: source throttling + operator buffering + sink flow control
+- Sliding window statistics for trend detection
+- Additive increase, multiplicative decrease (AIMD) for stability
 
 **Metrics:** 60% reduction in over-provisioning, <1s P99 latency maintained
 
-**Novel:** Transfer learning - pre-train on similar workloads
+**Novel:** Hierarchical backpressure propagation across operator chains
 
 ---
 
-### Tier 4: Vector Databases & Approximate Nearest Neighbor Search
+### Tier 4: Data Mesh & Observability
 
-#### 10. Hybrid OLAP-Vector Database with Integrated HNSW
-Unified columnar storage with vector similarity search.
-
-**Stack:** Modified ClickHouse (C++) + Custom HNSW index + Kafka
-
-**Technical Implementation:**
-- HNSW graph embedded in ClickHouse MergeTree engine
-- Hierarchical graph: multiple layers with exponentially decreasing density
-- Greedy search with beam width tuning (recall vs latency trade-off)
-- Scalar quantization (SQ8) for memory efficiency
-- Hybrid query execution: predicate filtering → vector search on subset
-- Incremental graph construction during merge operations
-
-**Metrics:** 1B vectors, <50ms hybrid queries, 10M inserts/day
-
-**Novel:** Learned proximity graphs using graph neural networks
-
----
-
-#### 11. Real-Time Vector Embedding with Model Drift Detection
-Streaming embedding generation with statistical drift monitoring.
-
-**Stack:** Kafka + Flink + ONNX Runtime + Custom drift detector (Python)
-
-**Technical Implementation:**
-- ONNX model inference in Flink operators (avoid serialization overhead)
-- Drift detection using Kolmogorov-Smirnov test on embedding distributions
-- Population Stability Index (PSI) for feature drift monitoring
-- ADWIN algorithm for concept drift detection
-- Model versioning with A/B testing (Thompson sampling)
-- Embedding cache with LRU eviction policy
-
-**Metrics:** 50M docs/day, <100ms embedding latency, detected 3 drift events
-
-**Novel:** Adversarial drift detection using discriminator network
-
----
-
-#### 12. Distributed Vector Index with Learned Partitioning
-Scalable ANN search using ML-learned data partitioning.
-
-**Stack:** Custom HNSW (Go) + K-means++ clustering + etcd + gRPC
-
-**Technical Implementation:**
-- Learned partitioning: k-means++ on vector space (minimize intra-cluster distance)
-- Voronoi diagram partitioning for query routing
-- Graph sharding: minimize edge cuts using METIS algorithm
-- Distributed coordination using etcd for cluster membership
-- Query routing: compute distance to centroids, route to top-k partitions
-- Replication factor 3 with consistent hashing
-
-**Metrics:** 5B vectors, 100 nodes, 20ms P95 latency, 80% single-partition queries
-
-**Novel:** Neural network-based partition routing
-
----
-
-### Tier 5: Data Mesh & Observability
-
-#### 13. Self-Service Data Mesh with Automated Lineage Tracking
+#### 9. Self-Service Data Mesh with Automated Lineage Tracking
 Decentralized data platform with automatic dependency graph construction.
 
 **Stack:** Apache Atlas + Kafka + Airflow + Custom lineage parser (Python)
@@ -273,11 +195,11 @@ Decentralized data platform with automatic dependency graph construction.
 
 **Metrics:** 200+ data products, 95% lineage coverage, 15 domains
 
-**Novel:** ML-based lineage inference for black-box transformations
+**Novel:** Column-level lineage tracking through expression analysis
 
 ---
 
-#### 14. Real-Time Data Quality Firewall with Adaptive Thresholds
+#### 10. Real-Time Data Quality Firewall with Adaptive Thresholds
 Streaming validation with circuit breaker pattern.
 
 **Stack:** Kafka Streams + Custom rule engine (Scala) + Great Expectations
@@ -292,47 +214,47 @@ Streaming validation with circuit breaker pattern.
 
 **Metrics:** <5ms validation latency, 99.9% good data pass-through
 
-**Novel:** Bayesian inference for threshold adaptation
+**Novel:** Statistical threshold adaptation using control charts
 
 ---
 
-### Tier 6: Cost Optimization & Caching
+### Tier 5: Cost Optimization & Caching
 
-#### 15. Intelligent Data Tiering with LSTM Access Prediction
-Automated S3 tiering using ML-predicted access patterns.
+#### 11. Intelligent Data Tiering with Access Pattern Analysis
+Automated S3 tiering using statistical access pattern analysis.
 
-**Stack:** S3 (Standard/IA/Glacier) + Athena + LSTM (PyTorch)
+**Stack:** S3 (Standard/IA/Glacier) + Athena + Custom tiering engine (Python)
 
 **Technical Implementation:**
-- LSTM with attention for access probability prediction
-- Feature engineering: recency, frequency, temporal patterns, file metadata
+- Time-series analysis: recency, frequency, temporal patterns
 - Markov chain model for state transitions (hot → warm → cold)
 - Cost-benefit analysis: storage cost vs retrieval cost vs access latency
-- Proactive tiering: move data 48 hours before predicted access
-- Reinforcement learning for policy optimization (Q-learning)
+- Proactive tiering: move data based on predicted access windows
+- Exponential smoothing for trend forecasting
+- Sliding window statistics for pattern detection
 
 **Metrics:** 5PB data, 65% cost reduction, 99.5% prediction accuracy
 
-**Novel:** Hierarchical temporal memory (HTM) for pattern recognition
+**Novel:** Multi-objective optimization balancing cost, latency, and retrieval frequency
 
 ---
 
-#### 16. Semantic Query Caching with Sentence Embeddings
+#### 12. Query Result Caching with Semantic Similarity
 Intelligent cache using query similarity instead of exact matching.
 
-**Stack:** Presto + Redis + Sentence-BERT + Custom cache layer
+**Stack:** Presto + Redis + Custom cache layer
 
 **Technical Implementation:**
 - SQL query normalization: canonicalization, constant folding, predicate reordering
-- Sentence-BERT embeddings for semantic similarity (cosine distance)
-- Approximate nearest neighbor search using LSH (locality-sensitive hashing)
+- Query fingerprinting using hash-based similarity (MinHash)
+- Approximate matching using Jaccard similarity on query tokens
 - Cache eviction: LRU with frequency-based promotion (LFU-LRU hybrid)
 - Query rewriting: substitute cached subqueries while preserving semantics
 - Partial result caching for common subexpressions
 
-**Metrics:** 70% cache hit rate (vs 20% exact-match), 5x cost reduction
+**Metrics:** 70% cache hit rate (vs 20% exact-match)
 
-**Novel:** Learned cache replacement policy using neural networks
+**Novel:** Query plan-based caching with partial result reuse
 
 ---
 
@@ -363,7 +285,7 @@ Intelligent cache using query similarity instead of exact matching.
 ### Distributed Systems
 - **Consensus Algorithms:** Raft, Multi-Paxos
 - **Consistency Models:** CRDTs, Vector Clocks, Lamport Timestamps
-- **Storage Engines:** LSM-trees, B+ trees, HNSW graphs
+- **Storage Engines:** LSM-trees, B+ trees, Skip Lists
 - **Fault Tolerance:** Replication, Checkpointing, Circuit Breakers
 
 ---
@@ -383,7 +305,7 @@ Intelligent cache using query similarity instead of exact matching.
 ### Data Structures for Distributed Systems
 - **Probabilistic:** Bloom filters, HyperLogLog, Count-Min Sketch
 - **Concurrent:** Lock-free skip lists, concurrent hash maps
-- **Spatial:** R-trees, Quadtrees, HNSW graphs for vector search
+- **Spatial:** R-trees, Quadtrees, K-d trees
 
 ### Distributed Transactions
 - **MVCC:** Multi-version concurrency control for snapshot isolation
