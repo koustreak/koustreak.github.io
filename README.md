@@ -28,7 +28,7 @@ I'm a Senior Data Engineer specializing in **distributed systems** and **large-s
 #### 1. Adaptive Pipeline Preemption Framework with Raft Consensus
 Custom priority scheduler implementing preemptive multitasking for distributed stream processing.
 
-**Stack:** Modified Kafka + Spark Structured Streaming + Kubernetes DRA
+**Stack:** Kafka + Spark Structured Streaming + Kubernetes + Docker + Custom Raft library (Go)
 
 **Technical Implementation:**
 - Raft consensus for distributed priority queue coordination across executors
@@ -44,7 +44,7 @@ Custom priority scheduler implementing preemptive multitasking for distributed s
 #### 2. Raft Consensus Implementation with Speculative Execution
 From-scratch Raft implementation in Go with novel optimizations.
 
-**Stack:** Pure Go, etcd (benchmarking), Kafka (log transport)
+**Stack:** Go + etcd (benchmarking) + Kafka (log transport) + Docker + Kubernetes
 
 **Technical Implementation:**
 - All Raft phases: leader election, log replication, membership changes, log compaction
@@ -63,7 +63,7 @@ From-scratch Raft implementation in Go with novel optimizations.
 #### 3. Multi-Region CRDT-Based Analytics with Causal Consistency
 Geo-distributed analytics using operation-based CRDTs with vector clocks.
 
-**Stack:** Kafka (cross-region) + Custom CRDT library (Scala) + DynamoDB Global Tables
+**Stack:** Kafka (cross-region) + Flink + Druid + DynamoDB Global Tables + Custom CRDT library (Scala)
 
 **Technical Implementation:**
 - Implemented G-Counter, PN-Counter, OR-Set, LWW-Register CRDTs
@@ -72,6 +72,8 @@ Geo-distributed analytics using operation-based CRDTs with vector clocks.
 - Anti-entropy protocol using Merkle trees for state reconciliation
 - Semilattice merge functions (commutative, associative, idempotent)
 - Delta-state CRDTs to minimize network bandwidth
+- Real-time analytics layer using Druid for low-latency queries on replicated data
+- Flink for stream processing and CRDT state synchronization
 
 **Metrics:** 100M events/day, sub-200ms cross-region sync, 5 AWS regions
 
@@ -84,7 +86,7 @@ Geo-distributed analytics using operation-based CRDTs with vector clocks.
 #### 4. Zero-Copy Lakehouse with Copy-on-Write Semantics
 Pointer-based views using Apache Iceberg's snapshot isolation.
 
-**Stack:** Modified Iceberg core + Spark + Custom metadata layer (Go) + Druid
+**Stack:** Iceberg + Spark + Druid + AWS S3 + Custom metadata layer (Go)
 
 **Technical Implementation:**
 - Incremental materialized views using Iceberg manifest files as pointers
@@ -103,7 +105,7 @@ Pointer-based views using Apache Iceberg's snapshot isolation.
 #### 5. Bi-Temporal Iceberg with Interval Tree Indexing
 Extended Iceberg with transaction-time and valid-time dimensions.
 
-**Stack:** Modified Iceberg core (Scala) + Spark + Custom temporal query engine
+**Stack:** Iceberg (Scala) + Spark + Hive Metastore + AWS Glue + Custom temporal query engine
 
 **Technical Implementation:**
 - Interval tree (augmented AVL tree) for temporal range queries
@@ -124,7 +126,7 @@ Extended Iceberg with transaction-time and valid-time dimensions.
 #### 6. Cost-Based Query Optimizer with Adaptive Statistics
 Self-tuning Spark SQL optimizer using runtime statistics feedback.
 
-**Stack:** Spark Catalyst + Custom cost model + Airflow
+**Stack:** Spark Catalyst + Airflow + Hive + AWS EMR + Custom cost model
 
 **Technical Implementation:**
 - Dynamic programming for join order enumeration (O(3^n) → O(n^2) with pruning)
@@ -143,7 +145,7 @@ Self-tuning Spark SQL optimizer using runtime statistics feedback.
 #### 7. Exactly-Once Semantics with Idempotent Sinks
 Distributed exactly-once without 2PC using deterministic request IDs.
 
-**Stack:** Kafka + Flink + Custom sink framework (Scala)
+**Stack:** Kafka + Flink + RocksDB + Kubernetes + Custom sink framework (Scala)
 
 **Technical Implementation:**
 - Deterministic request ID: `hash(topic, partition, offset, record_key)`
@@ -162,7 +164,7 @@ Distributed exactly-once without 2PC using deterministic request IDs.
 #### 8. Adaptive Backpressure with Token Bucket Rate Limiting
 Dynamic rate control for stream processing with feedback loops.
 
-**Stack:** Kafka + Spark Streaming + Kubernetes HPA + Prometheus
+**Stack:** Kafka + Spark Streaming + Kubernetes + Prometheus + Docker + AWS EKS
 
 **Technical Implementation:**
 - Token bucket algorithm with dynamic rate adjustment
@@ -183,7 +185,7 @@ Dynamic rate control for stream processing with feedback loops.
 #### 9. Self-Service Data Mesh with Automated Lineage Tracking
 Decentralized data platform with automatic dependency graph construction.
 
-**Stack:** Apache Atlas + Kafka + Airflow + Custom lineage parser (Python)
+**Stack:** Apache Atlas + Kafka + Airflow + Hive Metastore + AWS Glue + Custom lineage parser (Python)
 
 **Technical Implementation:**
 - SQL query parsing using ANTLR4 grammar for lineage extraction
@@ -202,7 +204,7 @@ Decentralized data platform with automatic dependency graph construction.
 #### 10. Real-Time Data Quality Firewall with Adaptive Thresholds
 Streaming validation with circuit breaker pattern.
 
-**Stack:** Kafka Streams + Custom rule engine (Scala) + Great Expectations
+**Stack:** Kafka Streams + Flink + Iceberg (data quality metrics) + Custom rule engine (Scala) + Great Expectations
 
 **Technical Implementation:**
 - Rule engine using Rete algorithm for pattern matching
@@ -218,12 +220,50 @@ Streaming validation with circuit breaker pattern.
 
 ---
 
+#### 11. Enterprise Data Warehouse with Dimensional Modeling
+Scalable data warehouse implementing Kimball methodology with real-time updates.
+
+**Stack:** Hive + Spark + Airflow + Hudi + AWS (S3, Redshift, Glue) + Presto
+
+**Technical Implementation:**
+- **Dimensional Modeling:** Star schema with conformed dimensions (customer, product, time, location)
+- **SCD Type 2:** Slowly changing dimensions with effective dating and current flag
+- **Fact Tables:** Transaction facts (additive), snapshot facts (semi-additive), accumulating snapshot facts
+- **Data Ingestion:** S3 (raw) → Spark → Hudi staging → Hive warehouse
+- **Batch Layer:** Airflow orchestration → Spark jobs → Hudi (merge-on-read) for historical data
+- **Query Layer:** Presto for federated queries across Hive and S3
+- **Data Quality:** Great Expectations validation in Airflow DAGs
+- **Partitioning:** Hive dynamic partitioning by date + bucketing by customer_id
+- **Compaction:** Hudi async compaction with configurable strategies
+- **Query Federation:** Presto for cross-source queries (Hive + S3 + Redshift)
+- **Orchestration:** Airflow DAGs with sensor operators, branch operators, and dynamic task generation
+- **Metadata Management:** Hive Metastore + AWS Glue Catalog for unified metadata
+
+**Architecture Layers:**
+1. **Ingestion:** S3 (batch data landing), AWS Glue crawlers for schema discovery
+2. **Processing:** Spark (batch ETL), Airflow (orchestration and scheduling)
+3. **Storage:** Hudi (curated layer with ACID), Hive (data warehouse), S3 (raw/archive)
+4. **Serving:** Presto (ad-hoc queries), Redshift Spectrum (BI tools), Hive (batch queries)
+
+**Data Modeling Patterns:**
+- **Conformed Dimensions:** Shared across multiple fact tables
+- **Junk Dimensions:** Low-cardinality flags combined into single dimension
+- **Degenerate Dimensions:** Transaction IDs stored in fact table
+- **Role-playing Dimensions:** Date dimension used as order_date, ship_date, delivery_date
+- **Bridge Tables:** Many-to-many relationships (e.g., account-customer)
+
+**Metrics:** 500TB data warehouse, 200+ dimension tables, 50+ fact tables, 1000+ Airflow DAGs, 99.9% SLA adherence
+
+**Novel:** Hybrid lakehouse architecture combining Iceberg (ACID), Hudi (upserts), and Hive (compatibility)
+
+---
+
 ### Tier 5: Cost Optimization & Caching
 
-#### 11. Intelligent Data Tiering with Access Pattern Analysis
+#### 12. Intelligent Data Tiering with Access Pattern Analysis
 Automated S3 tiering using statistical access pattern analysis.
 
-**Stack:** S3 (Standard/IA/Glacier) + Athena + Custom tiering engine (Python)
+**Stack:** AWS S3 (Standard/IA/Glacier) + Athena + Lambda + Timestream + Custom tiering engine (Python)
 
 **Technical Implementation:**
 - Time-series analysis: recency, frequency, temporal patterns
@@ -239,10 +279,10 @@ Automated S3 tiering using statistical access pattern analysis.
 
 ---
 
-#### 12. Query Result Caching with Semantic Similarity
+#### 13. Query Result Caching with Semantic Similarity
 Intelligent cache using query similarity instead of exact matching.
 
-**Stack:** Presto + Redis + Custom cache layer
+**Stack:** Presto + Redis + Kafka (query logs) + Custom cache layer
 
 **Technical Implementation:**
 - SQL query normalization: canonicalization, constant folding, predicate reordering
@@ -290,11 +330,69 @@ Intelligent cache using query similarity instead of exact matching.
 
 ---
 
+## Data Engineering Expertise
+
+### Stream Processing
+- **Apache Kafka:** Topic design, partitioning strategies, consumer groups, exactly-once semantics
+- **Apache Flink:** Stateful stream processing, event time processing, watermarks, checkpointing
+- **Spark Structured Streaming:** Micro-batch processing, continuous processing, stateful operations
+- **Change Data Capture (CDC):** Debezium for real-time database replication
+
+### Batch Processing & Orchestration
+- **Apache Spark:** RDD/DataFrame/Dataset APIs, Catalyst optimizer, Tungsten execution engine
+- **Apache Airflow:** DAG authoring, task dependencies, sensors, dynamic task generation, XComs
+- **Workflow Patterns:** Backfill strategies, idempotent pipelines, incremental processing
+
+### Data Lakehouse & Storage
+- **Apache Iceberg:** Table format, snapshot isolation, time travel, schema evolution, partition evolution
+- **Apache Hudi:** Copy-on-write, merge-on-read, incremental queries, compaction strategies
+- **Apache Hive:** Metastore, partitioning, bucketing, ACID transactions, ORC/Parquet formats
+- **Delta Lake:** ACID transactions, schema enforcement, time travel
+
+### OLAP & Analytics
+- **Apache Druid:** Real-time ingestion, columnar storage, bitmap indexes, rollup, retention policies
+- **Apache Superset:** Dashboard creation, SQL Lab, semantic layer
+- **Presto/Trino:** Distributed SQL, connector architecture, cost-based optimizer
+
+### Data Warehousing & Modeling
+- **Dimensional Modeling:** Star schema, snowflake schema, fact/dimension tables
+- **Slowly Changing Dimensions:** SCD Type 1, 2, 3 implementation strategies
+- **Kimball Methodology:** Conformed dimensions, fact table design, surrogate keys
+- **Data Vault:** Hub, link, satellite patterns for enterprise data warehousing
+
+### Cloud & Infrastructure (AWS)
+- **Storage:** S3 (lifecycle policies, versioning), EBS, EFS
+- **Compute:** EMR (Spark/Hive clusters), EC2, Lambda
+- **Data Services:** Glue (ETL, Catalog), Athena (serverless queries), Redshift (data warehouse)
+- **Streaming:** Kinesis Data Streams, Kinesis Firehose
+- **Time-series:** Timestream for IoT and operational data
+- **Orchestration:** Step Functions, MWAA (managed Airflow)
+
+### Containerization & Orchestration
+- **Docker:** Multi-stage builds, layer optimization, container registries (ECR, Docker Hub)
+- **Kubernetes:** Pod scheduling, StatefulSets, ConfigMaps, Secrets, Helm charts
+- **Spark on K8s:** Dynamic allocation, executor pod templates, shuffle service
+- **Flink on K8s:** JobManager/TaskManager deployment, savepoints, high availability
+
+### Data Quality & Governance
+- **Data Validation:** Great Expectations, custom validation frameworks
+- **Data Lineage:** Apache Atlas, OpenLineage, custom AST-based parsers
+- **Schema Management:** Avro Schema Registry, Protobuf, schema evolution strategies
+- **Data Catalog:** AWS Glue Catalog, Hive Metastore, Apache Atlas
+
+### Performance Optimization
+- **Partitioning:** Range, hash, list partitioning strategies
+- **File Formats:** Parquet (columnar), ORC (ACID), Avro (schema evolution)
+- **Compression:** Snappy, Gzip, LZ4, Zstd trade-offs
+- **Indexing:** Bloom filters, bitmap indexes, Z-ordering, clustering
+- **Query Optimization:** Predicate pushdown, partition pruning, broadcast joins
+
+---
+
 ## Distributed Systems Expertise
 
 ### Consensus & Coordination
 - **Raft Consensus:** Leader election, log replication, membership changes, log compaction
-- **Paxos Variants:** Multi-Paxos, Fast Paxos for high-throughput scenarios
 - **Coordination Services:** etcd, ZooKeeper for distributed configuration and leader election
 
 ### Consistency & Replication
